@@ -1487,18 +1487,24 @@
                 }
                 let bestMove = -1;
                 const difficulty = state.difficulty;
-               if (difficulty === 'easy') {
-               // Always pick the first empty cell (easiest possible)
-                 for (let i = 0; i < 9; i++) {
-                 if (state.board[i] === null) {
-                      bestMove = i;
-                      break;
-                      }
-                    }
-                }
+              if (difficulty === 'easy') {
+    const available = [];
+    for (let i = 0; i < 9; i++) {
+        if (state.board[i] === null) available.push(i);
+    }
+    if (available.length > 0) {
+        // 80% chance of picking the first cell, 20% random
+        if (Math.random() < 0.8) {
+            bestMove = available[0]; // first available
+        } else {
+            const randIdx = Math.floor(Math.random() * available.length);
+            bestMove = available[randIdx];
+        }
+    }
+}
                 else if (difficulty === 'medium') {
-                    // Minimax with depth limit (3)
-                    bestMove = getBestMoveWithDepth(state.board, 5);
+                    // Minimax with depth limit (4)
+                    bestMove = getBestMoveWithDepth(state.board, 7);
                 } else { // hard
                     bestMove = getBestMove(state.board);
                 }
